@@ -13,6 +13,14 @@ FACT_CHECKER_PROMPT = dedent(
     - Conclusions supported by evidence
     - Assumptions stated
     - Limitations noted if data gaps exist
+    - Data sufficient to answer the specific question
+    
+    ## Output
+    Return a structured review with:
+    - status: "approved" or "rejected"
+    - issues: list of specific issues (incorrect, inconsistent, insufficient)
+    - required_fixes: concrete actions for the analyst to rectify
+    - evidence_checked: artifacts/queries reviewed
     """
 ).strip()
 
@@ -31,7 +39,6 @@ REPORT_WRITER_PROMPT = dedent(
     """
 ).strip()
 
-
 CODER_PROMPT = dedent(
     """
     # Coding/Financial Analyst (Coder)
@@ -43,10 +50,12 @@ CODER_PROMPT = dedent(
     - Use tools to fetch data via artifacts
     - Produce charts/tables as artifacts
     - Use in-house APIs from coding_agent.*
+    - Address all fact checker feedback and resubmit
     
     ## Constraints
     - Follow guardrails (artifact-first, no large dumps)
     - Respect import restrictions
     - Cite evidence
+    - If feedback says data insufficient, fetch additional data or adjust scope
     """
 ).strip()

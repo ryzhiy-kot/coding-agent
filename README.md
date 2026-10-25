@@ -57,3 +57,9 @@ See `src/coding_agent/agents/` for agent setup with pydantic_ai and Vertex AI.
 - Root orchestrator: NO code execution, only clarification/feasibility/delegation/communication
 - Pipeline: clarify -> assess feasibility -> delegate to coder/analyst -> fact check -> report write
 - Subagents: Financial Analyst/Coder (can execute code), Fact Checker, Report Writer
+
+## Feedback Loop
+- Root orchestrator controls feedback loop
+- Fact checker can reject with specific issues (incorrect/inconsistent/insufficient)
+- Financial Analyst must rectify and resubmit until approved
+- Report writer only after approval
