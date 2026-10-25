@@ -28,3 +28,26 @@ def get_financial_analyst():
         _financial_analyst.tool(get_artifact_metadata)
         _financial_analyst.tool(execute_python)
     return _financial_analyst
+
+
+from .financial_tools import (
+    delegate_to_financial_analyst,
+    discover_apis_tool,
+    discover_data_sources_tool,
+    discover_sandbox_capabilities_tool,
+)
+
+__all__ = [
+    "bq_safe_query",
+    "delegate_to_financial_analyst",
+    "discover_apis_tool",
+    "discover_data_sources_tool",
+    "discover_sandbox_capabilities_tool",
+    "execute_python",
+    "get_artifact_metadata",
+    "get_attribution_breakdown",
+    "get_exposures",
+    "get_financial_analyst",
+    "get_pnl_daily_summary",
+    "search_news",
+]

@@ -48,3 +48,7 @@ See `src/coding_agent/agents/` for agent setup with pydantic_ai and Vertex AI.
 - Roles: Coding/Financial Analyst, Fact Checker/Reviewer, Report Writer
 - Capability discovery tools to check data sources, sandbox modules, APIs
 - Skills-based loading supported via pydantic_ai patterns
+
+## Agent Instructions
+- Financial analyst plugged with all tools and coder instructions (clarify, feasibility check, artifact-first, in-house APIs)
+- Root agent wired with delegation and capability discovery

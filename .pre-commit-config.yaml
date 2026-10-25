@@ -1,0 +1,27 @@
+repos:
+  # ── Python Linting & Formatting with Ruff ──
+  - repo: local
+    hooks:
+      # Run the linter and automatically fix safe violations (like unused imports)
+      - id: ruff-check
+        name: Ruff Check
+        entry: uv run ruff check
+        language: system
+        types: [python]
+        require_serial: true
+      # Run the formatter to keep code style consistent      #
+      - id: ruff-format
+        name: ruff-format
+        entry: uv run ruff format
+        language: system
+        types:
+          - python
+
+      # Run unit testing
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]

@@ -9,7 +9,9 @@ class ArtifactStore:
     def __init__(self, bucket: str = "agent-artifacts"):
         self.bucket = bucket
 
-    async def write(self, name: str, data: bytes, content_type: str = "application/octet-stream") -> ArtifactRef:
+    async def write(
+        self, name: str, data: bytes, content_type: str = "application/octet-stream"
+    ) -> ArtifactRef:
         # Placeholder - replace with actual upload
         uri = f"gs://{self.bucket}/{name}"
         return ArtifactRef(

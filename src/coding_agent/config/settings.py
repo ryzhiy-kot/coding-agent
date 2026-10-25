@@ -74,7 +74,7 @@ class StorageConfig(BaseModel):
 
 
 class VertexConfig(BaseModel):
-    project_id: str = Field(default="your-project")
+    project: str = Field(default="your-project")
     location: str = Field(default="us-central1")
     root_model: str = Field(default="google-gla:gemini-2.5-flash")
     analyst_model: str = Field(default="google-gla:gemini-2.5-pro")

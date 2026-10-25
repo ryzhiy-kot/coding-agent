@@ -125,7 +125,9 @@ class LocalSandboxExecutor:
                 )
 
         summary = stdout.strip().split("\n")[-5:] if stdout.strip() else []
-        summary_text = " | ".join(summary) if summary else ("Success" if ok_run else "Failed")
+        summary_text = (
+            " | ".join(summary) if summary else ("Success" if ok_run else "Failed")
+        )
 
         return CodeExecResult(
             ok=ok_run,
