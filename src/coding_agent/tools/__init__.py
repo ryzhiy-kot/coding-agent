@@ -42,3 +42,16 @@ __all__ = [
     "delegate_to_financial_analyst",
     "get_financial_analyst",
 ]
+from .financial_tools import (
+    bq_safe_query,
+    delegate_to_financial_analyst,
+    discover_apis_tool,
+    discover_data_sources_tool,
+    discover_sandbox_capabilities_tool,
+    execute_python,
+    get_artifact_metadata,
+    get_attribution_breakdown,
+    get_exposures,
+    get_pnl_daily_summary,
+    search_news,
+)

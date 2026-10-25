@@ -42,3 +42,9 @@ See `src/coding_agent/agents/` for agent setup with pydantic_ai and Vertex AI.
 - Artifacts (png/html/csv/parquet/json) collected from run dir
 - In-house APIs (this repo) available via PYTHONPATH - can import `coding_agent.*` modules
 - Skills support for discoverable workflows
+
+## Research Team Orchestration
+- Manager pattern: clarify business problem, assess feasibility (data/sources/modules), plan, delegate
+- Roles: Coding/Financial Analyst, Fact Checker/Reviewer, Report Writer
+- Capability discovery tools to check data sources, sandbox modules, APIs
+- Skills-based loading supported via pydantic_ai patterns

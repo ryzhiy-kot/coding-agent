@@ -106,3 +106,21 @@ async def delegate_to_financial_analyst(
     analyst = get_financial_analyst()
     result = await analyst.run(query, deps=context or {})
     return result.output
+
+
+async def discover_data_sources_tool(ctx: RunContext) -> dict[str, Any]:
+    from .capability_discovery import discover_data_sources
+
+    return await discover_data_sources(ctx)
+
+
+async def discover_sandbox_capabilities_tool(ctx: RunContext) -> dict[str, Any]:
+    from .capability_discovery import discover_sandbox_capabilities
+
+    return await discover_sandbox_capabilities(ctx)
+
+
+async def discover_apis_tool(ctx: RunContext) -> dict[str, Any]:
+    from .capability_discovery import discover_apis
+
+    return await discover_apis(ctx)
