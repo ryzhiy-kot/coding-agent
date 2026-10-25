@@ -1,15 +1,19 @@
+import asyncio
+import json
 import os
+import subprocess
 import sys
 import time
 import uuid
-import json
-import builtins
 from pathlib import Path
-from typing import Any
 
 from ..config.settings import get_config
-from ..schemas.financial import CodeExecInput, CodeExecResult
 from ..schemas.artifacts import ArtifactRef
+from ..schemas.financial import CodeExecInput, CodeExecResult
+
+
+class SandboxError(Exception):
+    pass
 
 
 class LocalSandboxExecutor:
@@ -25,56 +29,10 @@ class LocalSandboxExecutor:
 
     def _check_imports(self, code: str) -> tuple[bool, list[str]]:
         issues = []
-        # Simple static check
         for blocked in self.config.blocked_imports:
             if blocked in code:
                 issues.append(f"Blocked import/reference: {blocked}")
         return len(issues) == 0, issues
-
-    def _build_safe_globals(self):
-        safe_builtins = {}
-        allowed = {
-            "abs",
-            "all",
-            "any",
-            "bool",
-            "dict",
-            "enumerate",
-            "filter",
-            "float",
-            "int",
-            "len",
-            "list",
-            "map",
-            "max",
-            "min",
-            "range",
-            "reversed",
-            "round",
-            "set",
-            "sorted",
-            "str",
-            "sum",
-            "tuple",
-            "zip",
-            "print",
-            "isinstance",
-            "issubclass",
-            "type",
-            "hasattr",
-            "getattr",
-            "setattr",
-            "Exception",
-            "ValueError",
-            "TypeError",
-            "KeyError",
-            "IndexError",
-            "RuntimeError",
-        }
-        for name in allowed:
-            if hasattr(builtins, name):
-                safe_builtins[name] = getattr(builtins, name)
-        return {"__builtins__": safe_builtins}
 
     async def execute_python(
         self,
@@ -98,33 +56,28 @@ class LocalSandboxExecutor:
         run_dir = self.workdir / run_id
         run_dir.mkdir(parents=True, exist_ok=True)
 
-        # Write inputs info
         inputs_meta = [{"name": i.name, "uri": i.uri} for i in inputs]
         (run_dir / "inputs.json").write_text(json.dumps(inputs_meta, indent=2))
 
-        # Prepare environment
         env = os.environ.copy()
-        # Add pythonpath extras
         pythonpath = env.get("PYTHONPATH", "")
         extras = ":".join(self.config.pythonpath_extra)
         if extras:
             env["PYTHONPATH"] = f"{extras}:{pythonpath}" if pythonpath else extras
 
-        # Write code to file
         code_file = run_dir / "script.py"
         code_file.write_text(code)
 
-        # Execute with timeout
-        import subprocess
-
         try:
-            proc = subprocess.run(
+            proc = await asyncio.to_thread(
+                subprocess.run,
                 [sys.executable, str(code_file)],
                 cwd=str(run_dir),
                 env=env,
                 timeout=self.config.timeout_seconds,
                 capture_output=True,
                 text=True,
+                check=False,
             )
             stdout = proc.stdout[-8000:] if proc.stdout else ""
             stderr = proc.stderr[-8000:] if proc.stderr else ""
@@ -137,7 +90,7 @@ class LocalSandboxExecutor:
                 artifacts=[],
                 runtime_ms=int((time.time() - start) * 1000),
             )
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return CodeExecResult(
                 ok=False,
                 stderr=str(e),
@@ -146,7 +99,6 @@ class LocalSandboxExecutor:
                 runtime_ms=int((time.time() - start) * 1000),
             )
 
-        # Scan for artifacts (simple heuristic)
         artifacts: list[ArtifactRef] = []
         for ext, mime, atype in [
             (".png", "image/png", "image"),
@@ -159,7 +111,6 @@ class LocalSandboxExecutor:
             (".json", "application/json", "json"),
         ]:
             for f in run_dir.glob(f"*{ext}"):
-                # Copy to artifacts dir
                 dest = self.artifacts_dir / f"{run_id}_{f.name}"
                 dest.write_bytes(f.read_bytes())
                 artifacts.append(

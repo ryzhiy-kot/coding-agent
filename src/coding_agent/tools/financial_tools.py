@@ -3,6 +3,7 @@ from typing import Any
 
 from pydantic_ai import RunContext
 
+from ..sandbox.execute import CodeExecutor
 from ..schemas.artifacts import ArtifactMetadata
 from ..schemas.financial import (
     AnalystReport,
@@ -17,8 +18,6 @@ from ..schemas.financial import (
 from ..tools.artifacts import ArtifactStore
 from ..tools.bq_guarded import GuardedBQ
 from ..tools.news import NewsClient
-from ..sandbox.execute import CodeExecutor
-
 
 bq = GuardedBQ()
 news = NewsClient()

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 from ..schemas.artifacts import ArtifactMetadata, ArtifactRef
 
@@ -17,7 +17,7 @@ class ArtifactStore:
             mime=content_type,
             url=uri,
             name=name,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
             bytes=len(data),
         )
 
