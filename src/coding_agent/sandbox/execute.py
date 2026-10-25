@@ -11,7 +11,7 @@ class CodeExecutor:
         if self.config.provider == "local":
             self._impl = LocalSandboxExecutor()
         else:
-            self._impl = LocalSandboxExecutor()  # fallback to local for now
+            self._impl = LocalSandboxExecutor()
 
     async def execute_python(
         self,

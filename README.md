@@ -52,3 +52,8 @@ See `src/coding_agent/agents/` for agent setup with pydantic_ai and Vertex AI.
 ## Agent Instructions
 - Financial analyst plugged with all tools and coder instructions (clarify, feasibility check, artifact-first, in-house APIs)
 - Root agent wired with delegation and capability discovery
+
+## Research Pipeline
+- Root orchestrator: NO code execution, only clarification/feasibility/delegation/communication
+- Pipeline: clarify -> assess feasibility -> delegate to coder/analyst -> fact check -> report write
+- Subagents: Financial Analyst/Coder (can execute code), Fact Checker, Report Writer

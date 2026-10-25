@@ -3,6 +3,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from .artifacts import ArtifactRef
+
 
 class PnLDailySummaryRow(BaseModel):
     date: date
@@ -55,7 +57,7 @@ class NewsItem(BaseModel):
     source: str | None = None
     published_at: str | None = None
     url: str | None = None
-    summary: str  # truncated/condensed, not full body
+    summary: str
     tickers: list[str] = Field(default_factory=list)
 
 
@@ -89,7 +91,7 @@ class CodeExecResult(BaseModel):
     stdout: str = ""
     stderr: str = ""
     summary: str = ""
-    artifacts: list["ArtifactRef"] = Field(default_factory=list)
+    artifacts: list[ArtifactRef] = Field(default_factory=list)
     runtime_ms: int | None = None
     mem_mb_peak: int | None = None
 
@@ -98,11 +100,5 @@ class AnalystReport(BaseModel):
     summary: str
     drivers: list[dict[str, Any]] = Field(default_factory=list)
     evidence: list[dict[str, Any]] = Field(default_factory=list)
-    artifacts: list["ArtifactRef"] = Field(default_factory=list)
+    artifacts: list[ArtifactRef] = Field(default_factory=list)
     recommendations: list[str] = Field(default_factory=list)
-
-
-from .artifacts import ArtifactRef
-
-CodeExecResult.model_rebuild()
-AnalystReport.model_rebuild()

@@ -26,7 +26,7 @@ store = ArtifactStore()
 
 
 async def get_pnl_daily_summary(
-    ctx: RunContext,
+    _ctx: RunContext,
     start_date: date,
     end_date: date,
     min_abs_move: float | None = 50000.0,
@@ -36,7 +36,7 @@ async def get_pnl_daily_summary(
 
 
 async def get_attribution_breakdown(
-    ctx: RunContext,
+    _ctx: RunContext,
     dates: list[date],
     group_by: list[str],
 ) -> AttributionBreakdown:
@@ -45,7 +45,7 @@ async def get_attribution_breakdown(
 
 
 async def get_exposures(
-    ctx: RunContext,
+    _ctx: RunContext,
     as_of: date,
     tickers: list[str],
 ) -> ExposuresResult:
@@ -54,7 +54,7 @@ async def get_exposures(
 
 
 async def search_news(
-    ctx: RunContext,
+    _ctx: RunContext,
     tickers: list[str],
     start: date,
     end: date,
@@ -65,7 +65,7 @@ async def search_news(
 
 
 async def bq_safe_query(
-    ctx: RunContext,
+    _ctx: RunContext,
     template_name: str | None = None,
     sql: str | None = None,
     params: dict[str, Any] | None = None,
@@ -77,7 +77,7 @@ async def bq_safe_query(
 
 
 async def get_artifact_metadata(
-    ctx: RunContext,
+    _ctx: RunContext,
     uri: str,
 ) -> ArtifactMetadata:
     """Get metadata for artifact without reading full contents."""
@@ -85,7 +85,7 @@ async def get_artifact_metadata(
 
 
 async def execute_python(
-    ctx: RunContext,
+    _ctx: RunContext,
     code: str,
     inputs: list[dict[str, Any]] | None = None,
 ) -> CodeExecResult:
@@ -95,7 +95,7 @@ async def execute_python(
 
 
 async def delegate_to_financial_analyst(
-    ctx: RunContext,
+    _ctx: RunContext,
     query: str,
     context: dict[str, Any] | None = None,
 ) -> AnalystReport:
@@ -107,19 +107,45 @@ async def delegate_to_financial_analyst(
     return result.output
 
 
-async def discover_data_sources_tool(ctx: RunContext) -> dict[str, Any]:
+async def discover_data_sources_tool(_ctx: RunContext) -> dict[str, Any]:
     from .capability_discovery import discover_data_sources
 
-    return await discover_data_sources(ctx)
+    return await discover_data_sources(_ctx)
 
 
-async def discover_sandbox_capabilities_tool(ctx: RunContext) -> dict[str, Any]:
+async def discover_sandbox_capabilities_tool(_ctx: RunContext) -> dict[str, Any]:
     from .capability_discovery import discover_sandbox_capabilities
 
-    return await discover_sandbox_capabilities(ctx)
+    return await discover_sandbox_capabilities(_ctx)
 
 
-async def discover_apis_tool(ctx: RunContext) -> dict[str, Any]:
+async def discover_apis_tool(_ctx: RunContext) -> dict[str, Any]:
     from .capability_discovery import discover_apis
 
-    return await discover_apis(ctx)
+    return await discover_apis(_ctx)
+
+
+async def delegate_to_fact_checker(
+    _ctx: RunContext,
+    query: str,
+    context: dict[str, Any] | None = None,
+) -> str:
+    """Delegate validation/review to fact checker."""
+    from . import get_fact_checker
+
+    checker = get_fact_checker()
+    result = await checker.run(query, deps=context or {})
+    return str(result.output)
+
+
+async def delegate_to_report_writer(
+    _ctx: RunContext,
+    query: str,
+    context: dict[str, Any] | None = None,
+) -> str:
+    """Delegate report formatting to report writer."""
+    from . import get_report_writer
+
+    writer = get_report_writer()
+    result = await writer.run(query, deps=context or {})
+    return str(result.output)

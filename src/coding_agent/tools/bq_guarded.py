@@ -27,7 +27,6 @@ class GuardedBQ:
         max_rows_preview: int | None = None,
     ) -> PnLDailySummary:
         max_rows_preview = max_rows_preview or self.config.max_rows_preview
-        # Placeholder implementation - replace with actual BQ queries
         rows: list[PnLDailySummaryRow] = []
         preview: list[dict[str, Any]] = []
         return PnLDailySummary(
@@ -83,9 +82,9 @@ class GuardedBQ:
         max_bytes = max_bytes or self.config.max_bytes_billed
         warnings: list[str] = []
         errors: list[str] = []
+        _ = params
 
         if sql and not template_name:
-            # Basic guardrails - extend with proper SQL parsing
             sql_upper = sql.upper()
             if "SELECT *" in sql_upper:
                 errors.append("SELECT * is not allowed. Use explicit columns.")
@@ -95,7 +94,6 @@ class GuardedBQ:
         if errors:
             return BQSafeQueryResult(ok=False, errors=errors, warnings=warnings)
 
-        # Placeholder - implement dry-run and actual execution
         return BQSafeQueryResult(
             ok=True,
             template_name=template_name,

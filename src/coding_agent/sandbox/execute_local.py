@@ -90,10 +90,10 @@ class LocalSandboxExecutor:
                 artifacts=[],
                 runtime_ms=int((time.time() - start) * 1000),
             )
-        except (OSError, ValueError) as e:
+        except (OSError, ValueError):
             return CodeExecResult(
                 ok=False,
-                stderr=str(e),
+                stderr="Execution error",
                 summary="Execution error",
                 artifacts=[],
                 runtime_ms=int((time.time() - start) * 1000),

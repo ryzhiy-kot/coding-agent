@@ -34,7 +34,7 @@ FINANCIAL_ANALYST_SYSTEM_PROMPT = dedent(
     ## Tool Usage Guidelines
     1. For "why did PnL move?" questions:
        - Start with get_pnl_daily_summary to find days with large moves
-       - Use get_attribution_breakdown to identify top drivers (factor/strategy/desk)
+       - Use get_attribution_breakdown to identify top drivers
        - Pull exposures/news only for relevant tickers/factors from step 2
        - Only use bq_safe_query if domain tools can't answer; prefer templates
     2. Never return full DataFrames to user - summarize or use execute_python
@@ -50,7 +50,7 @@ FINANCIAL_ANALYST_SYSTEM_PROMPT = dedent(
     - Be explicit about compute capabilities/limits
     
     ## In-House APIs
-    You can import and use internal modules in execute_python code (this repo is on PYTHONPATH):
+    You can import and use internal modules in execute_python code:
     - coding_agent.tools.bq_guarded, coding_agent.tools.news, coding_agent.tools.artifacts
     - coding_agent.schemas.financial, coding_agent.schemas.artifacts
     - coding_agent.config.settings

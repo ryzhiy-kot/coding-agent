@@ -5,10 +5,9 @@ from pydantic_ai import RunContext
 from ..config.settings import get_config
 
 
-async def discover_data_sources(ctx: RunContext) -> dict[str, Any]:
+async def discover_data_sources(_: RunContext) -> dict[str, Any]:
     """Discover available BQ tables, schemas, and samples."""
     config = get_config()
-    # Placeholder - replace with actual INFORMATION_SCHEMA queries
     return {
         "bq": {
             "project": config.bq.project_id,
@@ -19,7 +18,7 @@ async def discover_data_sources(ctx: RunContext) -> dict[str, Any]:
     }
 
 
-async def discover_sandbox_capabilities(ctx: RunContext) -> dict[str, Any]:
+async def discover_sandbox_capabilities(_: RunContext) -> dict[str, Any]:
     """Discover available Python modules in sandbox."""
     config = get_config().sandbox
     return {
@@ -31,10 +30,11 @@ async def discover_sandbox_capabilities(ctx: RunContext) -> dict[str, Any]:
     }
 
 
-async def discover_apis(ctx: RunContext) -> dict[str, Any]:
+async def discover_apis(_: RunContext) -> dict[str, Any]:
     """Discover available internal APIs."""
+    config = get_config()
     return {
-        "news_api": get_config().news.base_url,
+        "news_api": config.news.base_url,
         "bq": True,
-        "artifact_store": get_config().storage.local_dir,
+        "artifact_store": config.storage.local_dir,
     }

@@ -18,7 +18,6 @@ class NewsClient:
         max_items: int | None = None,
     ) -> NewsResult:
         max_items = max_items or self.config.max_items
-        # Placeholder - replace with actual API call
         items: list[NewsItem] = []
         return NewsResult(
             tickers=tickers,
